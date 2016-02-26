@@ -1,0 +1,28 @@
+{
+
+  "server": {
+    "url": "http://graphite",
+    "public_url": ""
+  },
+
+  "notifiers": [
+    {
+      "type": "webhook",
+      "url": "http://requestb.in/<bin>"
+    }
+  ],
+
+  "watches": [
+    {
+        "name": "web-response-time",
+        "sources": {
+          "t": "sumSeries(service.web.duration.*.p90)"
+        },
+        "triggers": {
+          "warning": "t > 1"
+        }
+    }
+    
+  ]
+
+}
