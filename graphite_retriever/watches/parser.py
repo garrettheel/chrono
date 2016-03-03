@@ -16,7 +16,7 @@ OPERATORS = {'*': op.mul, '/': op.truediv, '+': op.add, '-': op.sub}
 LOGICAL_OPERATORS = {'AND': op.and_, 'OR': op.or_}
 
 
-RULE_TOKENIZER = make_tokenizer(
+TRIGGER_TOKENIZER = make_tokenizer(
     [
         ('Comparator', (r'({0})'.format('|'.join(sorted(COMPARATORS.keys(), reverse=True))),)),
         ('LogicalOperator', (r'({0})'.format('|'.join(map(re.escape, LOGICAL_OPERATORS.keys()))),)),
@@ -28,7 +28,7 @@ RULE_TOKENIZER = make_tokenizer(
 )
 
 
-class UnsetVariableError(ValueError):
+class UnresolvedVariableError(ValueError):
     pass
 
 
@@ -55,15 +55,14 @@ class Expr(object):
             if var_name in variables:
                 parts[i] = variables[var_name]
             else:
-                raise UnsetVariableError("Unknown variable: {}".format(var_name))
+                raise UnresolvedVariableError("Unresolved variable: {}".format(var_name))
 
-        
         self._evaluate_ops(parts, OPERATORS.get('*'), OPERATORS.get('/'))
         self._evaluate_ops(parts, OPERATORS.get('+'), OPERATORS.get('-'))
-        
+
         assert len(parts) == 1, "There should only be one value remaining"
         return parts[0]
-            
+
 
     def _evaluate_ops(self, parts, *ops):
         ops_remaining = True
@@ -118,11 +117,10 @@ class Trigger(object):
 
 
 def tokenize(_str):
-    return [x for x in RULE_TOKENIZER(_str) if x.type not in ['Space']]
+    return [x for x in TRIGGER_TOKENIZER(_str) if x.type not in ['Space']]
 
 
 def parse(seq):
-    # Flatten the parser output
     make_expr = lambda x: Expr(*[x[0]] + list(itertools.chain.from_iterable(x[1])))
     make_bool_expr = lambda x: BoolExpr(*x)
     make_trigger = lambda x: Trigger(*[x[0]] + list(itertools.chain.from_iterable(x[1])))

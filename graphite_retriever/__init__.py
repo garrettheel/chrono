@@ -2,6 +2,8 @@ import sys
 import argparse
 import logging
 
+from graphite_retriever.scheduler import Scheduler
+
 logger = logging.getLogger(__name__)
     
 
@@ -16,18 +18,17 @@ def main():
 
     logging.basicConfig(level=getattr(logging, args.log_level),
                         format='%(asctime)s - %(levelname)s - %(message)s')
-    
-    from graphite_retriever.config import get_config
-    config = get_config(args.config)
-    
+
+    logger.info("Starting graphite-retriever")
+
+    from graphite_retriever.config import init_config, config
+    init_config(args.config)
     if not config:
         sys.exit(1)
-        
-    logger.info("Starting graphite-retriever")
-    
-    # start something
-    
 
+    # Schedule watches
+    sched = Scheduler(*config['watches'])
+    sched.run()
 
 
 if __name__ == '__main__':
