@@ -1,23 +1,39 @@
 import operator as op
-from nose.tools import assert_equals, assert_true, assert_false
+from nose.tools import assert_equals, assert_true, assert_false, assert_raises
 
-from graphite_retriever.watches.parser import build_trigger, Expr
-
-
-def test_evaluate_trigger():
-    assert_true(build_trigger("1 < 2").evaluate({}))
-    assert_false(build_trigger("1 > 2").evaluate({}))
-    
-    assert_true(build_trigger("1 < a").evaluate({'a': 2}))
-    assert_false(build_trigger("1 > a").evaluate({'a': 2}))
-    
-    assert_true(build_trigger("1 + 3 * 2 < a AND 2 > 1").evaluate({'a': 8}))
+from graphite_retriever.watches.triggers import build_trigger
+from graphite_retriever.watches.triggers.eval import MethodCallError
 
 
-def test_expr():
-    assert_equals(Expr(1).evaluate(), 1)
-    assert_equals(Expr(1, op.add, 2).evaluate(), 3)
-    assert_equals(Expr(1, op.add, 2, op.mul, 3).evaluate(), 7)
-    assert_equals(Expr(1, op.add, "a").evaluate({'a': 5}), 6)
-    assert_equals(Expr("a", op.mul, "b").evaluate({'a': 5, 'b': 3}), 15)
-    assert_equals(Expr("a", op.add, "b", op.mul, 5).evaluate({'a': 2, 'b': 4}), 22)
+def test_wrong_number_params():
+    with assert_raises(MethodCallError):
+        build_trigger("last(t, t) > 0").evaluate({'t': [1]})
+    with assert_raises(MethodCallError):
+        build_trigger("last(t, t) > 0").evaluate({'t': [1]})
+
+
+def test_simple_last():
+    t = build_trigger("last(t) < 5")
+
+    assert_equals(t.evaluate({'t': [5]}), False)
+    assert_equals(t.evaluate({'t': [7,2,5]}), False)
+    assert_equals(t.evaluate({'t': [4]}), True)
+    assert_equals(t.evaluate({'t': [3,7,2]}), True)
+
+
+def test_simple_sum():
+    t = build_trigger("sum(t) < 5")
+
+    assert_equals(t.evaluate({'t': [3]}), True)
+    assert_equals(t.evaluate({'t': [1,1,2]}), True)
+    assert_equals(t.evaluate({'t': [6]}), False)
+    assert_equals(t.evaluate({'t': [2,1,2,1]}), False)
+
+
+def test_simple_avg():
+    t = build_trigger("avg(t) < 5")
+
+    assert_equals(t.evaluate({'t': [3]}), True)
+    assert_equals(t.evaluate({'t': [1,2,3,4,5]}), True)
+    assert_equals(t.evaluate({'t': [6]}), False)
+    assert_equals(t.evaluate({'t': [4,5,6,7,8]}), False)

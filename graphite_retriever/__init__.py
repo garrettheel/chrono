@@ -5,7 +5,7 @@ import logging
 from graphite_retriever.scheduler import Scheduler
 
 logger = logging.getLogger(__name__)
-    
+
 
 def main():
     parser = argparse.ArgumentParser(description='Watches the result of graphite queries')
@@ -18,6 +18,7 @@ def main():
 
     logging.basicConfig(level=getattr(logging, args.log_level),
                         format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.getLogger("requests").setLevel(logging.WARNING)
 
     logger.info("Starting graphite-retriever")
 

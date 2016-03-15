@@ -3,3 +3,4 @@ requests==2.9.1
 six==1.10.0
 funcparserlib==0.3.6
 gevent==1.1rc5
+pyyaml==3.11

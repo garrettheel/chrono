@@ -1,4 +1,5 @@
 import os
+import yaml
 import json
 import logging
 
@@ -10,7 +11,7 @@ def read_config(conf_path):
     config = None
     try:
         with open(conf_path, 'r') as f:
-            config = json.load(f)
+            config = yaml.load(f)
             jsonschema.validate(config, _load_schema())
     except IOError as e:
         logger.error("Unable to read config file '{}'".format(conf_path))

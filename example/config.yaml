@@ -1,0 +1,13 @@
+server:
+  url: "http://192.168.99.100:8000"
+  public_url: ""
+notifiers:
+  - type: "webhook"
+    url: "http://requestb.in/<bin>"
+watches:
+  - name: "web-response-time"
+    series:
+      # TODO: allow for a from & to offset here
+      responseTime: "sumSeries(stats.gauges.service.web.duration.*.p90)"
+    triggers:
+      warning: "avg(responseTime) > 1"
