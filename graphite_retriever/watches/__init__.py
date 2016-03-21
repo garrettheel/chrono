@@ -1,10 +1,6 @@
 import logging
 
-import requests
-
-from graphite_retriever.config import config
-from graphite_retriever.util.graphite import parse_graphite_response
-
+from graphite_retriever import graphite
 from .triggers import build_trigger
 
 logger = logging.getLogger(__name__)
@@ -19,28 +15,9 @@ class Watch(object):
 
     def check(self):
         logger.info('Running check for {}'.format(self.name))
-        server_url = config['server']['url']
 
-        # TODO: ensure order of keys() and values() is consistent
-        params = {
-            'target': self.series.values(),
-            'from': '-30minute',
-            'until': 'now',
-            'rawData': "true",
-        }
+        results = graphite.get_metrics(self.series)
+        print results
 
-        resp = requests.get('{}/render'.format(server_url), params=params)
-        logger.info("Fetching data from {}".format(resp.request.url))
-
-        if resp.status_code != 200:
-            logger.error("Error retrieving data from Graphite - {}".format(resp.status_code))
-            return
-
-        result = parse_graphite_response(self.series.keys(), resp.content)
-
-        print result
-
-        # want to end up with
-        {
-            't': [None, None, None, 3.1, 2.1, 5.4]
-        }
+        if not results:
+            pass  # something went wrong

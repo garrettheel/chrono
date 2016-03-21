@@ -31,6 +31,5 @@ def main():
     sched = Scheduler(*config['watches'])
     sched.run()
 
-
 if __name__ == '__main__':
     main()
