@@ -1,3 +1,7 @@
-# TODO
+# Major Features
 
-- Catch kill signal and cleanup before exit
+- Allow sources other than just Graphite (e.g opentsdb)
+
+# Fixes/Enhancements
+
+- Better cleanup before exit

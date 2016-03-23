@@ -23,7 +23,7 @@ def get_metrics(series):
         logger.error('Request to {} timed out.'.format(server_url))
         return None
 
-    logger.info("Fetching data from {}".format(resp.request.url))
+    logger.debug("Fetching data from {}".format(resp.request.url))
 
     if resp.status_code != 200:
         logger.error("Error retrieving data from Graphite - {}".format(resp.status_code))

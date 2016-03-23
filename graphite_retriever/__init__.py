@@ -12,7 +12,7 @@ def main():
     parser.add_argument('-c', '--config',
                         help='path to a configuration file. defaults to config.py in cwd', default='config.json')
     parser.add_argument('--log-level',
-                        help="log level", default='INFO',
+                        help="log level", default='DEBUG',
                         choices=['ERROR', 'WARNING', 'INFO', 'DEBUG'])
     args = parser.parse_args()
 

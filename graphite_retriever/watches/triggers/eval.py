@@ -14,11 +14,15 @@ METHODS = {
 
 
 class Trigger(object):
-    def __init__(self, expr):
+    def __init__(self, raw, expr):
+        self.raw = raw
         self.expr = expr
 
     def evaluate(self, ctx={}):
         return self.visit(self.expr, ctx)
+
+    def __repr__(self):
+        return self.raw
 
     def visit(self, node, ctx):
         clz = str(node.__class__.__name__)
