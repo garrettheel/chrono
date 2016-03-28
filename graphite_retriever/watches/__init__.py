@@ -2,7 +2,7 @@ import logging
 import six
 from collections import defaultdict
 
-from graphite_retriever import graphite
+from graphite_retriever.backends import get_backend
 from .triggers import build_trigger
 
 logger = logging.getLogger(__name__)
@@ -12,6 +12,7 @@ class Watch(object):
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name', None)
+        self.backend = kwargs.get('backend', None)
         self.series = kwargs.get('series', [])
         self.triggers = {}
 
@@ -23,7 +24,7 @@ class Watch(object):
     def check(self):
         logger.info('Running check for {}'.format(self.name))
 
-        metrics = graphite.get_metrics(self.series)  # todo: better var name
+        metrics = self.backend.get_metrics(self.series)
         if not metrics:
             return
 

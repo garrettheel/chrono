@@ -2,11 +2,12 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type" : "object",
     "properties" : {
-        "server" : {
-            "type" : "object",
-            "properties": {
-                "url": {"type": "string"},
-                "public_url": {"type": "string"}
+        "backends" : {
+            "type": "array",
+            "items": {
+              "oneOf" : [
+                {"$ref" : "#/definitions/backend-graphite"}
+              ]
             }
         },
         "notifiers": {
@@ -14,7 +15,7 @@
             "items": {
                 "type": "object",
                 "oneOf": [
-                  {"$ref": "#/definitions/webhook"}
+                  {"$ref": "#/definitions/notifier-webhook"}
                 ]
             }
         },
@@ -38,7 +39,17 @@
     },
     "additionalProperties": false,
     "definitions": {
-      "webhook": {
+      "backend-graphite": {
+        "type" : "object",
+        "properties": {
+            "name": {"type": "string"},
+            "type": {"type": "string", "enum": ["graphite"]},
+            "url": {"type": "string"},
+            "public_url": {"type": "string"}
+        },
+        "required": ["name", "type", "url"]
+      },
+      "notifier-webhook": {
         "type": "object",
         "properties": {
           "type": {"type": "string"},
