@@ -1,5 +1,5 @@
 from .graphite import GraphiteBackend
-from graphite_retriever.config import config
+from chrono.config import config
 
 
 BACKENDS = {

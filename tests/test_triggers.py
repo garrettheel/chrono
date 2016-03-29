@@ -1,8 +1,8 @@
 import operator as op
 from nose.tools import assert_equals, assert_true, assert_false, assert_raises
 
-from graphite_retriever.watches.triggers import build_trigger
-from graphite_retriever.watches.triggers.eval import MethodCallError
+from chrono.watches.triggers import build_trigger
+from chrono.watches.triggers.eval import MethodCallError
 
 
 def test_wrong_number_params():

@@ -13,7 +13,7 @@ SIGNALS_TO_NAMES = dict((getattr(signal, n), n) \
 
 class Scheduler(object):
 
-    def __init__(self, *watches):
+    def __init__(self):
         self.scheduled_pool = Pool()
         self.active_pool = Pool()
 
@@ -21,19 +21,14 @@ class Scheduler(object):
         self.stop_event = gevent.event.Event()
 
         self.active_watches = {}  # TODO: use for managing adding/removing
-        for watch in watches:
-            self.add(watch)
 
-    def add(self, watch):
-        self._schedule(30, watch.check)
-
-    def _schedule(self, delay_seconds, func, *args, **kwargs):
+    def add(self, delay_seconds, func, *args, **kwargs):
         if self.shutting_down:
             return
 
         self.active_pool.spawn(func, *args, **kwargs)
 
-        g = gevent.Greenlet(self._schedule, delay_seconds, func, *args, **kwargs)
+        g = gevent.Greenlet(self.add, delay_seconds, func, *args, **kwargs)
         self.scheduled_pool.add(g)
         g.start_later(delay_seconds)
 

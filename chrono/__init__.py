@@ -2,7 +2,9 @@ import sys
 import argparse
 import logging
 
-from graphite_retriever.scheduler import Scheduler
+from .runner import Runner
+from .scheduler import Scheduler
+
 
 logger = logging.getLogger(__name__)
 
@@ -20,16 +22,15 @@ def main():
                         format='%(asctime)s - %(levelname)s - %(message)s')
     logging.getLogger("requests").setLevel(logging.WARNING)
 
-    logger.info("Starting graphite-retriever")
+    logger.info("Starting chrono")
 
-    from graphite_retriever.config import init_config, config
+    from chrono.config import init_config, config
     init_config(args.config)
     if not config:
         sys.exit(1)
 
-    # Schedule watches
-    sched = Scheduler(*config['watches'])
-    sched.run()
+    runner = Runner(config)
+    runner.run()
 
 if __name__ == '__main__':
     main()
