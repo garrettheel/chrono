@@ -5,6 +5,8 @@ class Level(object):
             self.order = order
 
         def __cmp__(self, other):
+            if other is None:
+                return 1
             return cmp(self.order, other.order)
 
         def __repr__(self):

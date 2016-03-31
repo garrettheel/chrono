@@ -2,6 +2,12 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type" : "object",
     "properties" : {
+        "storage": {
+          "type": "object",
+          "properties": {
+            "type": {"type": "string"}
+          }
+        },
         "backends" : {
             "type": "array",
             "items": {

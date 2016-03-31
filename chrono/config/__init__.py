@@ -6,6 +6,7 @@ config = {}
 
 def init_config(path):
     global config
-    config.update(read_config(path))
-    if config:
+    new_config = read_config(path)
+    if new_config:
+        config.update(new_config)
         process_config(config)

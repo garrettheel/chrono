@@ -30,7 +30,7 @@ watches:
     series:
       responseTime: "sumSeries(stats.gauges.service.web.duration.*.p90)"
     triggers:
-      warning: "avg(responseTime) < 4"
+      warning: "avg(responseTime) > 3"
 ```
 
 ### Notifier

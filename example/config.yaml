@@ -1,3 +1,5 @@
+storage:
+  type: local
 backends:
   - name: default
     type: graphite
@@ -11,4 +13,4 @@ watches:
       # TODO: allow for a from & to offset here
       responseTime: "sumSeries(stats.gauges.service.web.duration.*.p90)"
     triggers:
-      warning: "avg(responseTime) < 4"
+      warning: "avg(responseTime) > 2"

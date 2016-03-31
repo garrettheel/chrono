@@ -23,8 +23,6 @@ class Watch(object):
             level = Level.from_string(raw_level)
             self.triggers[level] = [build_trigger(t) for t in raw_triggers]
 
-        self.state = Level.NORMAL  # TODO: may want to start at a "nil" state of sorts
-
     def check(self):
         logger.info('Running check for {}'.format(self.name))
 
@@ -45,6 +43,4 @@ class Watch(object):
                     triggered.append(trigger)
                     highest_level = max(level, highest_level)
 
-        original_state = self.state
-        self.state = highest_level
-        return original_state, self.state, triggered
+        return highest_level, triggered
