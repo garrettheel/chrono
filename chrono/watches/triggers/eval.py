@@ -18,6 +18,9 @@ class Trigger(object):
         self.raw = raw
         self.expr = expr
 
+    def to_json(self):
+        return self.raw
+
     def evaluate(self, ctx={}):
         return self.visit(self.expr, ctx)
 

@@ -1,10 +1,22 @@
-from .graphite import GraphiteBackend
+from six import with_metaclass
+
 from chrono.config import config
 
 
-BACKENDS = {
-    'graphite': GraphiteBackend
-}
+registry = {}
+
+
+class BackendMeta(type):
+    def __new__(mcs, name, bases, params):
+        clz = super(BackendMeta, mcs).__new__(mcs, name, bases, params)
+        if 'name' in params:
+            registry[params['name']] = clz
+        return clz
+
+
+class Backend(with_metaclass(BackendMeta)):
+    def to_json(self):
+        return self.name
 
 
 def get_backend(backends, name):
@@ -20,5 +32,8 @@ def get_backend(backends, name):
 
 
 def create_backend(**kwargs):
-    backend_clazz = BACKENDS.get(kwargs.get('type'))
+    backend_clazz = registry.get(kwargs.get('type'))
     return backend_clazz(**kwargs)
+
+
+from .graphite import GraphiteBackend

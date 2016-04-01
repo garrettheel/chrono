@@ -6,6 +6,11 @@ __all__ = ['process_config']
 logger = logging.getLogger(__name__)
 
 
+def process_storage(config):
+    from chrono.storage import get_storage_engine
+    config['storage'] = get_storage_engine(config['storage'])
+
+
 def process_backends(config):
     from chrono.backends import create_backend
     backends = []
@@ -39,6 +44,7 @@ def process_watches(config):
 
 
 def process_config(config):
+    process_storage(config)
     process_backends(config)
     process_notifiers(config)
     process_watches(config)

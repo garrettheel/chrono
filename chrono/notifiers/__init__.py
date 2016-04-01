@@ -18,6 +18,9 @@ class Notifier(with_metaclass(NotifierMeta)):
     def __init__(self):
         pass
 
+    def to_json(self):
+        return self.name
+
 
 def type_to_notifier(type_):
     return registry.get(type_, None)

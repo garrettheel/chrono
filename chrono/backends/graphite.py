@@ -1,6 +1,7 @@
 import logging
 import requests
 
+from . import Backend
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +26,9 @@ def _parse_response(keys, content):
     return result
 
 
-class GraphiteBackend(object):
+class GraphiteBackend(Backend):
+    name = 'graphite'
+
     def __init__(self, **kwargs):
         self.url = kwargs.get('url')
 

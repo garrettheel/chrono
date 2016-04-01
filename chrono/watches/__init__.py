@@ -23,6 +23,12 @@ class Watch(object):
             level = Level.from_string(raw_level)
             self.triggers[level] = [build_trigger(t) for t in raw_triggers]
 
+    def to_json(self):
+        return {
+            'name': self.name,
+            'backend': self.backend
+        }
+
     def check(self):
         logger.info('Running check for {}'.format(self.name))
 
@@ -37,7 +43,6 @@ class Watch(object):
                 logger.debug('Evaluating trigger: {}\nInput: {}'
                              .format(trigger, metrics))
                 did_trigger = trigger.evaluate(metrics)
-                logger.debug('Result for "{}" was {}'.format(trigger, did_trigger))
 
                 if did_trigger:
                     triggered.append(trigger)

@@ -13,6 +13,3 @@ class Storage(object):
 
     def set(self, key, value):
         raise NotImplementedError
-
-    def enqueue(self, check, *args, **kwargs):
-        raise NotImplementedError
