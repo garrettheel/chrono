@@ -33,6 +33,11 @@ watches:
       warning: "avg(responseTime) > 3"
 ```
 
+The following functions are supported in trigger expressions:
+* `avg(series)`
+* `sum(series)`
+* `last(series)`
+
 ### Notifier
 
 A destination for notifications when a `Watch` changes state.
